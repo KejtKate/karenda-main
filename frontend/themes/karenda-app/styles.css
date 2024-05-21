@@ -1,0 +1,47 @@
+@import url('./main-layout.css');    html {
+      --lumo-primary-color: hsl(214, 25%, 51%);
+      --lumo-primary-color-50pct: hsla(214, 25%, 51%, 0.5);
+      --lumo-primary-color-10pct: hsla(214, 25%, 51%, 0.1);
+      --lumo-error-color: hsl(3, 87%, 71%);
+      --lumo-error-color-50pct: hsla(3, 87%, 71%, 0.5);
+      --lumo-error-color-10pct: hsla(3, 87%, 71%, 0.1);
+      --lumo-success-color: hsl(145, 41%, 55%);
+      --lumo-success-color-50pct: hsla(145, 41%, 55%, 0.5);
+      --lumo-success-color-10pct: hsla(145, 41%, 55%, 0.1);
+      --lumo-shade: hsl(214, 22%, 19%);
+      --lumo-shade-5pct: hsla(214, 22%, 19%, 0.05);
+      --lumo-shade-10pct: hsla(214, 22%, 19%, 0.1);
+      --lumo-shade-20pct: hsla(214, 22%, 19%, 0.2);
+      --lumo-shade-30pct: hsla(214, 22%, 19%, 0.3);
+      --lumo-shade-40pct: hsla(214, 22%, 19%, 0.4);
+      --lumo-shade-50pct: hsla(214, 22%, 19%, 0.5);
+      --lumo-shade-60pct: hsla(214, 22%, 19%, 0.6);
+      --lumo-shade-70pct: hsla(214, 22%, 19%, 0.7);
+      --lumo-shade-80pct: hsla(214, 22%, 19%, 0.8);
+      --lumo-shade-90pct: hsla(214, 22%, 19%, 0.9);
+      --lumo-body-text-color: hsl(214, 22%, 19%);
+      --lumo-primary-text-color: hsl(214, 25%, 51%);
+      --lumo-error-text-color: hsl(3, 87%, 71%);
+      --lumo-success-text-color: hsl(145, 41%, 55%);
+      --lumo-border-radius-s: calc(var(--lumo-size-m) / 6);
+      --lumo-border-radius-m: calc(var(--lumo-size-m) / 2);
+      --lumo-border-radius-l: var(--lumo-size-m);
+
+    }
+
+    [theme~="dark"] {
+      --lumo-primary-color: hsl(214, 25%, 51%);
+      --lumo-primary-color-50pct: hsla(214, 25%, 51%, 0.5);
+      --lumo-primary-color-10pct: hsla(214, 25%, 51%, 0.1);
+      --lumo-base-color: hsl(214, 21%, 22%);
+      --lumo-error-color: hsl(3, 87%, 71%);
+      --lumo-error-color-50pct: hsla(3, 87%, 71%, 0.5);
+      --lumo-error-color-10pct: hsla(3, 87%, 71%, 0.1);
+      --lumo-success-color: hsl(145, 41%, 55%);
+      --lumo-success-color-50pct: hsla(145, 41%, 55%, 0.5);
+      --lumo-success-color-10pct: hsla(145, 41%, 55%, 0.1);
+      --lumo-success-text-color: hsl(145, 41%, 55%);
+      --lumo-error-text-color: hsl(3, 87%, 71%);
+      --lumo-primary-text-color: hsl(214, 25%, 51%);
+
+    }
