@@ -1,30 +1,42 @@
 package com.example.application.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Lob;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
+
+import static jakarta.persistence.CascadeType.ALL;
 
 @Entity
 @Table(name = "application_user")
 public class User extends AbstractEntity {
 
+    @Column(name = "username", nullable = false)
     private String username;
+
+    @Column(name = "name", nullable = false)
     private String name;
+
+    @Email
+    @Column(name = "email", nullable = false)
+    private String email;
+
     @JsonIgnore
-    private String hashedPassword;
+    @Column(name = "password", nullable = false)
+    private String password;
+
     @Enumerated(EnumType.STRING)
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Role> roles;
     @Lob
-    @Column(length = 1000000)
+    @Column(name = "profile_picture", length = 1000000)
     private byte[] profilePicture;
+
+    @OneToMany(mappedBy = "user", cascade = ALL, fetch = FetchType.EAGER)
+    private List<CalendarEntry> calendarEntries = new ArrayList<>();
 
     public String getUsername() {
         return username;
@@ -38,12 +50,23 @@ public class User extends AbstractEntity {
     public void setName(String name) {
         this.name = name;
     }
-    public String getHashedPassword() {
-        return hashedPassword;
+
+    public @Email String getEmail() {
+        return email;
     }
-    public void setHashedPassword(String hashedPassword) {
-        this.hashedPassword = hashedPassword;
+
+    public void setEmail(@Email String email) {
+        this.email = email;
     }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public Set<Role> getRoles() {
         return roles;
     }
@@ -57,4 +80,11 @@ public class User extends AbstractEntity {
         this.profilePicture = profilePicture;
     }
 
+    public List<CalendarEntry> getCalendarEntries() {
+        return calendarEntries;
+    }
+
+    public void setCalendarEntries(List<CalendarEntry> calendarEntries) {
+        this.calendarEntries = calendarEntries;
+    }
 }

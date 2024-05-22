@@ -5,6 +5,7 @@ import com.example.application.security.AuthenticatedUser;
 import com.example.application.views.calendar.CalendarView;
 import com.example.application.views.notes.NotesView;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.contextmenu.MenuItem;
@@ -18,9 +19,12 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.html.UnorderedList;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.menubar.MenuBar;
+import com.vaadin.flow.dom.ThemeList;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.StreamResource;
+import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.server.auth.AccessAnnotationChecker;
+import com.vaadin.flow.theme.lumo.Lumo;
 import com.vaadin.flow.theme.lumo.LumoUtility.AlignItems;
 import com.vaadin.flow.theme.lumo.LumoUtility.BoxSizing;
 import com.vaadin.flow.theme.lumo.LumoUtility.Display;
@@ -101,6 +105,7 @@ public class MainLayout extends AppLayout {
         Optional<User> maybeUser = authenticatedUser.get();
         if (maybeUser.isPresent()) {
             User user = maybeUser.get();
+            VaadinSession.getCurrent().setAttribute(User.class, user);
 
             Avatar avatar = new Avatar(user.getName());
             StreamResource resource = new StreamResource("profile-pic",
@@ -121,6 +126,17 @@ public class MainLayout extends AppLayout {
             div.getElement().getStyle().set("align-items", "center");
             div.getElement().getStyle().set("gap", "var(--lumo-space-s)");
             userName.add(div);
+            userName.getSubMenu().addItem("Profile", e -> {
+                UI.getCurrent().navigate("profile");
+            });
+            userName.getSubMenu().addItem("Toggle dark theme", click -> {
+                ThemeList themeList = UI.getCurrent().getElement().getThemeList(); //TODO czy to działa
+
+                if (themeList.contains(Lumo.DARK)) {
+                    themeList.remove(Lumo.DARK);
+                } else {
+                    themeList.add(Lumo.DARK);
+                }});
             userName.getSubMenu().addItem("Sign out", e -> {
                 authenticatedUser.logout();
             });
