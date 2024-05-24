@@ -1,8 +1,13 @@
 package com.example.application.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeBinderType;
+import org.springframework.data.annotation.TypeAlias;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +18,8 @@ import static jakarta.persistence.CascadeType.ALL;
 @Entity
 @Table(name = "application_user")
 public class User extends AbstractEntity {
+
+    private static final long serialVersionUID = 145242134264657L;
 
     @Column(name = "username", nullable = false)
     private String username;
@@ -31,9 +38,10 @@ public class User extends AbstractEntity {
     @Enumerated(EnumType.STRING)
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Role> roles;
+
     @Lob
-    @Column(name = "profile_picture", length = 1000000)
-    private byte[] profilePicture;
+    @Column(name = "profile_picture")
+    protected byte[] profilePicture;
 
     @OneToMany(mappedBy = "user", cascade = ALL, fetch = FetchType.EAGER)
     private List<CalendarEntry> calendarEntries = new ArrayList<>();
@@ -73,15 +81,17 @@ public class User extends AbstractEntity {
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
-    public byte[] getProfilePicture() {
-        return profilePicture;
-    }
-    public void setProfilePicture(byte[] profilePicture) {
-        this.profilePicture = profilePicture;
-    }
 
     public List<CalendarEntry> getCalendarEntries() {
         return calendarEntries;
+    }
+
+    public byte[] getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(byte[] profilePicture) {
+        this.profilePicture = profilePicture;
     }
 
     public void setCalendarEntries(List<CalendarEntry> calendarEntries) {

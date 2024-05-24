@@ -15,11 +15,11 @@ import java.util.Set;
 @Getter
 @Setter
 //@EqualsAndHashCode(callSuper = true)
-@Table(name = "calendar_entries")
+@Table(name = "calendar_entries", uniqueConstraints = { @UniqueConstraint(name = "originalID", columnNames = "originalID")})
 public class CalendarEntry extends AbstractEntity {
 
 
-    @Column(name = "originalID", nullable = false, unique = true, updatable = false)
+    @Column(name = "originalID", nullable = false, updatable = false)
     private String originalID;
 
     @Column(name = "title", nullable = false)
@@ -56,6 +56,7 @@ public class CalendarEntry extends AbstractEntity {
     private boolean editable;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name ="user_id", foreignKey = @ForeignKey(name = "app_user_id"))
     private User user;
 
 

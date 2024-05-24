@@ -29,9 +29,10 @@ public class UserService {
 
     private AuthenticatedUser authenticatedUser;
 
-    public UserService(UserRepository repository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository repository, PasswordEncoder passwordEncoder, AuthenticatedUser authenticatedUser) {
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
+        this.authenticatedUser = authenticatedUser;
     }
 
     public Optional<User> get(Long id) {

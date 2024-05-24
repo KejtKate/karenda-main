@@ -89,34 +89,10 @@ public class ProfileView extends VerticalLayout implements BeforeLeaveObserver {
 
         final MemoryBuffer memoryBuffer = new MemoryBuffer();
         upload = new Upload(memoryBuffer);
-        upload.setAcceptedFileTypes("image/jpeg", "image/png");
+        upload.setAcceptedFileTypes("image/*");
         upload.setMaxFileSize(1024 * 1024);
         upload.setDropLabel(new Span("Upload avatar"));
-        upload.addProgressListener(e->{
-            if (e.getContentLength() > MAX_FILE_SIZE_BYTES || e.getReadBytes() > MAX_FILE_SIZE_BYTES){
-                Notification notification = Notification.show("Image too big");
-                notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
-                upload.interruptUpload();
 
-            }
-        });
-//        upload.addFinishedListener(e -> {
-//
-//            byte[] bytes;
-//            try {
-//                bytes = memoryBuffer.getInputStream().readAllBytes();
-//            } catch (IOException ex) {
-//                Notification.show("Upload failed: %s".formatted(ex.getMessage()));
-//                return;
-//            }
-//        if (BinaryValidation.isValidJPEG(bytes) != ValidationResult.OK) {
-//            Notification.show("Not valid JPEG data");
-//            return;
-//        }
-// All validation good, safe to show the image
-//        image.setSrc(new StreamResource("image.jpg", () -> new ByteArrayInputStream(bytes)));
-//
-//    });
         upload.addSucceededListener(e -> {
             avatarChanged = true;
             try{
@@ -132,8 +108,7 @@ public class ProfileView extends VerticalLayout implements BeforeLeaveObserver {
         if(user.getProfilePicture() == null){
             removeAvatarButton.setEnabled(false);
         }
-        //https://cookbook.vaadin.com/upload-image-to-file
-        //https://vaadin.com/blog/secure-coding-practices-2-binary-upload-validation
+
 
         removeAvatarButton.addClickListener(e ->{
             if (removeAvatarButton.isEnabled()){
@@ -231,38 +206,5 @@ public class ProfileView extends VerticalLayout implements BeforeLeaveObserver {
             confirmDialog.open();
         }
     }
-//    public static ValidationResult isValidJPEG(byte[] data) {
-//        try {
-//            // Check the first 2 bytes:
-//            if (data == null || data.length < 2 || (data[0] & 0xff) != 0xff || (data[1] & 0xff) != 0xd8) {
-//                return ValidationResult.INVALID_JPEG;
-//            }
-//            // Check last 2 bytes:
-//            if ((data[data.length - 2] & 0xff) != 0xff || (data[data.length - 1] & 0xff) != 0xd9) {
-//                return ValidationResult.INVALID_JPEG;
-//            }
-//            return ValidationResult.OK;
-//        } catch (Exception e) {
-//            // Ignore: Treat the same as validation error
-//        }
-//        return ValidationResult.VALIDATION_ERROR;
-//    }
-//
-//    public static ValidationResult isValidPNG(byte[] data) {
-//        try {
-//            if (!Arrays.equals(data, 0, 7, new BigInteger("89504e470d0a1a0a", 16).toByteArray(), 0, 7)) {
-//                return ValidationResult.INVALID_PNG;
-//            }
-//            return ValidationResult.OK;
-//        } catch (Exception e) {
-//            // Ignore: Treat the same as validation error
-//        }
-//        return ValidationResult.VALIDATION_ERROR;
-//    }
-//
-//    public enum ValidationResult{
-//        OK, VALIDATION_ERROR, EXTERNAL_VALIDATION_ERROR,
-//
-//        INVALID_JPEG, INVALID_PNG
-//    }
+
 }

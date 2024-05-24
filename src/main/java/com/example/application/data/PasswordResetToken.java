@@ -1,14 +1,12 @@
 package com.example.application.data;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 
 import java.util.Calendar;
 import java.util.Date;
 
 @Entity
+@Table(name = "password_reset_token", uniqueConstraints = { @UniqueConstraint(name = "user_id", columnNames = "user_id")})
 public class PasswordResetToken extends AbstractEntity{
 
     private static final int EXPIRATION = 60 * 24;
@@ -16,7 +14,7 @@ public class PasswordResetToken extends AbstractEntity{
     private String token;
 
     @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
-    @JoinColumn(nullable = false, name = "user_id")
+    @JoinColumn(nullable = false, name = "user_id", foreignKey = @ForeignKey(name = "app_user_id"))
     private User user;
 
     private Date expiryDate;
