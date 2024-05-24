@@ -29,8 +29,9 @@ public class UserService {
 
     private AuthenticatedUser authenticatedUser;
 
-    public UserService(UserRepository repository, PasswordEncoder passwordEncoder, AuthenticatedUser authenticatedUser) {
+    public UserService(UserRepository repository, PasswordTokenRepository tokenRepository, PasswordEncoder passwordEncoder, AuthenticatedUser authenticatedUser) {
         this.repository = repository;
+        this.tokenRepository = tokenRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticatedUser = authenticatedUser;
     }

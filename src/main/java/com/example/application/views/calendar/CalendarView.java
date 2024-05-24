@@ -11,6 +11,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
 import jakarta.annotation.security.PermitAll;
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.stefan.fullcalendar.*;
 import org.vaadin.stefan.fullcalendar.dataprovider.EntryProvider;
 import org.vaadin.stefan.fullcalendar.dataprovider.InMemoryEntryProvider;
@@ -33,6 +34,7 @@ public class CalendarView extends VerticalLayout {
     @Getter
     private final FullCalendar calendar;
     private final CalendarToolbar toolbar;
+    @Autowired
     private final EntryService entryService;
 
 
@@ -119,7 +121,7 @@ public class CalendarView extends VerticalLayout {
         System.out.println("getStart(): " + event.getStart());
         System.out.println("getStartWithOffset():  " + event.getStartWithOffset());
         Entry entry = new Entry();
-        entry.setStart(event.getStart()); // also event times are always utc based  TODO ???????????
+        entry.setStart(event.getStart()); // also event times are always utc based
         entry.setEnd(event.getEnd());
         entry.setAllDay(event.isAllDay());
         entry.setColor("dodgerblue");
@@ -138,7 +140,6 @@ public class CalendarView extends VerticalLayout {
         calendar.gotoDate(event.getDate());
     }
 
-    //Collection bo jak jest reccuring to jest ileś tam entries
 
     protected void onEntriesCreated(Collection<Entry> entries) {
         entryService.saveCalendarEntries(entries);

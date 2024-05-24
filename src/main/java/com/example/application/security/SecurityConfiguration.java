@@ -37,7 +37,6 @@ public class SecurityConfiguration extends VaadinWebSecurity {
 //        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
 //        authProvider.setUserDetailsService(userDetailsService);
 //        authProvider.setPasswordEncoder(passwordEncoder());
-//
 //        return authProvider;
 //    }
 //
@@ -46,17 +45,6 @@ public class SecurityConfiguration extends VaadinWebSecurity {
 //        return http.getSharedObject(AuthenticationManagerBuilder.class)
 //                .authenticationProvider(authenticationProvider())
 //                .build();
-//    }
-//
-
-
-
-
-    //TO JEST TYLKO PO TO ŻEBY PODEJRZEĆ BAZE H2-CONSOLE - DO USUNIĘCIA W PRODUKCJI
-//    @Override
-//    protected void configure(WebSecurity web) throws Exception {
-//        web.ignoring().requestMatchers(new AntPathRequestMatcher("/h2-console/**"));
-//        super.configure(web);
 //    }
 
     @Override

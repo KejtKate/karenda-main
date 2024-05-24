@@ -26,13 +26,7 @@ public class EntryService {
 
 
     public CalendarEntry toCalendarEntry(Entry entry) {
-        CalendarEntry calendarEntry = new CalendarEntry(entry); // czy przypadkiem dzieki temu nie musze już pisać tych wszystkich setterów i getterów?
-//        calendarEntry.setOriginalID(entry.getId());
-//        calendarEntry.setTitle(entry.getTitle());
-//        calendarEntry.setStart(entry.getStart());
-//        calendarEntry.setEnd(entry.getEnd());
-        //itp
-        return calendarEntry;
+        return new CalendarEntry(entry);
     }
     public Entry toEntry(CalendarEntry calendarEntry) {
         Entry entry = new Entry(String.valueOf(calendarEntry.getId()));

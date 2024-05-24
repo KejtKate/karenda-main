@@ -1,11 +1,15 @@
 package com.example.application.data;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Calendar;
 import java.util.Date;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "password_reset_token", uniqueConstraints = { @UniqueConstraint(name = "user_id", columnNames = "user_id")})
 public class PasswordResetToken extends AbstractEntity{
 
@@ -38,29 +42,6 @@ public class PasswordResetToken extends AbstractEntity{
         this.expiryDate = calculateExpiryDate();
     }
 
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Date getExpiryDate() {
-        return expiryDate;
-    }
-
-    public void setExpiryDate(Date expiryDate) {
-        this.expiryDate = expiryDate;
-    }
 
     private Date calculateExpiryDate() {
         final Calendar cal = Calendar.getInstance();

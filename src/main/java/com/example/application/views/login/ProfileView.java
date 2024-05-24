@@ -53,11 +53,9 @@ public class ProfileView extends VerticalLayout implements BeforeLeaveObserver {
     private TextField name;
     private EmailField email;
     private Image profilePic;
-    private Upload upload;
-    private Button removeAvatarButton;
     private Button applyChangesButton;
 
-    private boolean avatarChanged = false;
+
 
     public ProfileView(UserService userService){
         this.userService = userService;
@@ -71,97 +69,50 @@ public class ProfileView extends VerticalLayout implements BeforeLeaveObserver {
         initBinders();
         populateData();
 
-//        setHorizontalComponentAlignment(Alignment.CENTER, userForm);
+        setHorizontalComponentAlignment(Alignment.CENTER, userForm);
 
-//        setAlignItems(Alignment.CENTER);
-//        setJustifyContentMode(JustifyContentMode.CENTER);
-//        add(userForm);
+        setAlignItems(Alignment.CENTER);
+        setJustifyContentMode(JustifyContentMode.CENTER);
+        add(userForm);
     }
 
     private void initFormFields() {
         name = new TextField("Name");
         email = new EmailField("Email");
-        StreamResource resource = new StreamResource("profile-pic",
-                () -> new ByteArrayInputStream(user.getProfilePicture()));
-        profilePic = new Image(resource, "Profile picture");
-        profilePic.setHeight("300px");
-        profilePic.setWidth("300px");
 
-        final MemoryBuffer memoryBuffer = new MemoryBuffer();
-        upload = new Upload(memoryBuffer);
-        upload.setAcceptedFileTypes("image/*");
-        upload.setMaxFileSize(1024 * 1024);
-        upload.setDropLabel(new Span("Upload avatar"));
-
-        upload.addSucceededListener(e -> {
-            avatarChanged = true;
-            try{
-                byte[] bytes = memoryBuffer.getInputStream().readAllBytes();
-                profilePic.setSrc(new StreamResource("pic", ()-> new ByteArrayInputStream(bytes)));
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-        });
-
-        removeAvatarButton = new Button("Remove own picture");
-        removeAvatarButton.setId("remove-pic");
-        if(user.getProfilePicture() == null){
-            removeAvatarButton.setEnabled(false);
-        }
-
-
-        removeAvatarButton.addClickListener(e ->{
-            if (removeAvatarButton.isEnabled()){
-                user.setProfilePicture(null);
-                profilePic = null;
-                removeAvatarButton.setEnabled(false);
-                avatarChanged = true;
-            }
-        });
+//        StreamResource resource = new StreamResource("profile-pic",
+//                () -> new ByteArrayInputStream(user.getProfilePicture()));
+//        profilePic = new Image(resource, "Profile picture");
+//        profilePic.setHeight("300px");
+//        profilePic.setWidth("300px");
 
         applyChangesButton = new Button("Apply changes");
         applyChangesButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        applyChangesButton.addClickListener(e ->{
-            try{
-                userBinder.writeBean(user);
-
-                if (memoryBuffer.getFileData() != null){
-                    byte[] data = memoryBuffer.getInputStream().readAllBytes();
-                    user.setProfilePicture(data);
-                    userService.update(user);
-                    removeAvatarButton.setEnabled(true);
-                }else {
-                    userService.update(user);
-                }
-                avatarChanged = false;
-                getUI().ifPresent(ui -> ui.getPage().reload());
-            }catch (ValidationException validationException){
-                return;
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-        });
-
+        applyChangesButton.addClickListener(e -> {
+                    try {
+                        userBinder.writeBean(user);
+                        userService.update(user);
+                        //getUI().ifPresent(ui -> ui.getPage().reload());
+                    } catch (ValidationException validationException) {}
+                });
         userForm.add(
                 name,
                 email,
-                upload,
-                removeAvatarButton,
                 applyChangesButton
         );
+
     }
     private void initFormLayouts() {
 
+//        setSizeFull();
+//        setSpacing(true);
+//        setAlignItems(Alignment.CENTER);
+//        HorizontalLayout content = new HorizontalLayout();
+//        content.setSizeFull();
 
-        setSizeFull();
-        setSpacing(true);
-        setAlignItems(Alignment.CENTER);
-        HorizontalLayout content = new HorizontalLayout();
-        content.setSizeFull();
-
-        VerticalLayout sidePic = new VerticalLayout(profilePic);
-        sidePic.setWidth("40%");
-        sidePic.setAlignSelf(Alignment.CENTER, profilePic);
+//        VerticalLayout sidePic = new VerticalLayout(profilePic);
+//        sidePic.setWidth("40%");
+//        sidePic.setAlignSelf(Alignment.CENTER, profilePic);
 
         userForm.setResponsiveSteps(new FormLayout.ResponsiveStep("0", 1, TOP), new FormLayout.ResponsiveStep("600", 3, TOP));
         userForm.setId("profile-form");
@@ -169,13 +120,11 @@ public class ProfileView extends VerticalLayout implements BeforeLeaveObserver {
         userForm.getStyle().setPadding("enabled");
         userForm.setColspan(name, 3);
         userForm.setColspan(email, 3);
-        userForm.setColspan(upload, 1);
-        userForm.setColspan(removeAvatarButton, 1);
         userForm.setColspan(applyChangesButton, 3);
 
-        content.add(sidePic, userForm);
-
-        add(content);
+//        content.add(userForm);
+//
+//        add(content);
     }
 
     private void initBinders() {
@@ -196,7 +145,7 @@ public class ProfileView extends VerticalLayout implements BeforeLeaveObserver {
 
     @Override
     public void beforeLeave(BeforeLeaveEvent event) {
-        if (userBinder.hasChanges() || avatarChanged) {
+        if (userBinder.hasChanges()) {
             final BeforeLeaveEvent.ContinueNavigationAction action = event.postpone();
             final ConfirmDialog confirmDialog = new ConfirmDialog();
             confirmDialog.setText("You have unsaved changes! Are you sure you want to leave?");
