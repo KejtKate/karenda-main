@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 
-//do Dialog - ukrywa godziny gdy allday
 public class MyDateTimePicker extends CustomField<LocalDateTime> {
 
     private final DatePicker datePicker = new DatePicker();
@@ -19,7 +18,7 @@ public class MyDateTimePicker extends CustomField<LocalDateTime> {
 
     MyDateTimePicker(String label) {
         setLabel(label);
-        datePicker.setI18n(new DatePicker.DatePickerI18n().setFirstDayOfWeek(1));  //czy to bedzie dzialać?
+        datePicker.setI18n(new DatePicker.DatePickerI18n().setFirstDayOfWeek(1));
         add(datePicker, timePicker);
     }
 

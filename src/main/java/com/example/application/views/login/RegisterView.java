@@ -152,6 +152,7 @@ public class RegisterView extends VerticalLayout {
             passwordConfirm.setInvalid(false);
             return ok();
         }else {
+            password.setInvalid(false);
             final String errorMessage = "Confirmed password doesn't match initial password";
             passwordConfirm.setInvalid(true);
             passwordConfirm.setErrorMessage(errorMessage);

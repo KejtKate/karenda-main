@@ -3,11 +3,9 @@ package com.example.application.views;
 import com.example.application.data.User;
 import com.example.application.security.AuthenticatedUser;
 import com.example.application.views.calendar.CalendarView;
-import com.example.application.views.notes.NotesView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
-import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
@@ -21,7 +19,6 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.dom.ThemeList;
 import com.vaadin.flow.router.RouterLink;
-import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.server.auth.AccessAnnotationChecker;
 import com.vaadin.flow.theme.lumo.Lumo;
@@ -40,18 +37,13 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 import com.vaadin.flow.theme.lumo.LumoUtility.TextColor;
 import com.vaadin.flow.theme.lumo.LumoUtility.Whitespace;
 import com.vaadin.flow.theme.lumo.LumoUtility.Width;
-import java.io.ByteArrayInputStream;
+
 import java.util.Optional;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 
-/**
- * The main view is a top-level placeholder for other views.
- */
+
 public class MainLayout extends AppLayout {
 
-    /**
-     * A simple navigation item component, based on ListItem element.
-     */
     public static class MenuItemInfo extends ListItem {
 
         private final Class<? extends Component> view;
@@ -59,13 +51,11 @@ public class MainLayout extends AppLayout {
         public MenuItemInfo(String menuTitle, Component icon, Class<? extends Component> view) {
             this.view = view;
             RouterLink link = new RouterLink();
-            // Use Lumo classnames for various styling
             link.addClassNames(Display.FLEX, Gap.XSMALL, Height.MEDIUM, AlignItems.CENTER, Padding.Horizontal.SMALL,
                     TextColor.BODY);
             link.setRoute(view);
 
             Span text = new Span(menuTitle);
-            // Use Lumo classnames for various styling
             text.addClassNames(FontWeight.MEDIUM, FontSize.MEDIUM, Whitespace.NOWRAP);
 
             if (icon != null) {
@@ -107,19 +97,11 @@ public class MainLayout extends AppLayout {
             User user = maybeUser.get();
             VaadinSession.getCurrent().setAttribute(User.class, user);
 
-//            Avatar avatar = new Avatar(user.getName());
-//            StreamResource resource = new StreamResource("profile-pic",
-//                    () -> new ByteArrayInputStream(user.getProfilePicture()));
-//            avatar.setImageResource(resource);
-//            avatar.setThemeName("xsmall");
-//            avatar.getElement().setAttribute("tabindex", "-1");
-
             MenuBar userMenu = new MenuBar();
             userMenu.setThemeName("tertiary-inline contrast");
 
             MenuItem userName = userMenu.addItem("");
             Div div = new Div();
-//            div.add(avatar);
             div.add(user.getName());
             div.add(new Icon("lumo", "dropdown"));
             div.getElement().getStyle().set("display", "flex");
@@ -130,12 +112,13 @@ public class MainLayout extends AppLayout {
                 UI.getCurrent().navigate("profile");
             });
             userName.getSubMenu().addItem("Toggle dark theme", click -> {
-                ThemeList themeList = UI.getCurrent().getElement().getThemeList(); //TODO czy to działa
-
+                ThemeList themeList = UI.getCurrent().getElement().getThemeList();
                 if (themeList.contains(Lumo.DARK)) {
                     themeList.remove(Lumo.DARK);
+                    VaadinSession.getCurrent().setAttribute(ThemeList.class, themeList);
                 } else {
                     themeList.add(Lumo.DARK);
+                    VaadinSession.getCurrent().setAttribute(ThemeList.class, themeList);
                 }});
             userName.getSubMenu().addItem("Sign out", e -> {
                 authenticatedUser.logout();
@@ -167,11 +150,8 @@ public class MainLayout extends AppLayout {
     }
 
     private MenuItemInfo[] createMenuItems() {
-        return new MenuItemInfo[]{ //
-                new MenuItemInfo("Calendar", LineAwesomeIcon.CALENDAR_SOLID.create(), CalendarView.class), //
-
-                new MenuItemInfo("Notes", LineAwesomeIcon.STICKY_NOTE_SOLID.create(), NotesView.class), //
-
+        return new MenuItemInfo[]{
+                new MenuItemInfo("Calendar", LineAwesomeIcon.CALENDAR_SOLID.create(), CalendarView.class)
         };
     }
 

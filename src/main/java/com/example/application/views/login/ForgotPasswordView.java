@@ -29,6 +29,7 @@ import static com.vaadin.flow.data.binder.ValidationResult.ok;
 @PageTitle("Password reset")
 @AnonymousAllowed
 public class ForgotPasswordView extends VerticalLayout implements HasUrlParameter<String>, AfterNavigationObserver {
+
     @Autowired
     private final UserService userService;
 
@@ -45,8 +46,6 @@ public class ForgotPasswordView extends VerticalLayout implements HasUrlParamete
 
     public ForgotPasswordView(UserService userService){
         this.userService = userService;
-
-
         final H2 registerHeader = new H2("Password reset");
         this.passwordForm = new FormLayout();
 
@@ -56,7 +55,6 @@ public class ForgotPasswordView extends VerticalLayout implements HasUrlParamete
         add(registerHeader,passwordForm);
     }
 
-
     @Override
     public void setParameter(BeforeEvent beforeEvent, String parameter) {
         url = parameter;
@@ -64,9 +62,9 @@ public class ForgotPasswordView extends VerticalLayout implements HasUrlParamete
 
     @Override
     public void afterNavigation(AfterNavigationEvent event) {
-//        if(url.isBlank()) {
-//            UI.getCurrent().navigate("login");
-//        }else
+        if(url.isBlank()) {
+            UI.getCurrent().navigate("login");
+        }else
         if(url.equalsIgnoreCase("success")) {
             H3 title1 = new H3("A password recovery link was sent. Check your mailbox! \n  It may have ended up in spam folder");
             passwordForm.add(title1);
@@ -140,7 +138,8 @@ public class ForgotPasswordView extends VerticalLayout implements HasUrlParamete
         if(initialPassword.equals(passwordConfirm.getValue())){
             passwordConfirm.setInvalid(false);
             return ok();
-        }else {
+        }else{
+            passwordConfirm.setInvalid(false);
             final String errorMessage = "Confirmed password doesn't match initial password";
             passwordConfirm.setInvalid(true);
             passwordConfirm.setErrorMessage(errorMessage);

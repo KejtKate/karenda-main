@@ -38,7 +38,7 @@ public class LoginView extends LoginOverlay implements BeforeEnterObserver {
     @Autowired
     private final UserService userService;
 
-    private MailSender mailSender;
+    private final MailSender mailSender;
 
     private EmailField emailField;
 

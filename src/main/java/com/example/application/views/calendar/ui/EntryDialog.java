@@ -27,7 +27,7 @@ import java.util.Locale;
 
 public class EntryDialog extends Dialog {
 
-    private static final long serialVersionUID = 1L; //The serialVersionUID is a universal version identifier for a Serializable class
+    private static final long serialVersionUID = 1L;
 
     private static final String[] COLORS = {"tomato", "orange", "dodgerblue", "mediumseagreen", "gray", "slateblue", "violet"};
 
@@ -69,6 +69,7 @@ public class EntryDialog extends Dialog {
         //pola
         TextField fieldTitle = new TextField("Title");
         ComboBox<String> fieldColor = new ComboBox<>("Color", COLORS);
+        fieldColor.setPlaceholder("Select or write your own color");
         fieldColor.setAllowCustomValue(true);
         fieldColor.addCustomValueSetListener(event -> fieldColor.setValue(event.getDetail()));
         fieldColor.setClearButtonVisible(true);
@@ -99,14 +100,12 @@ public class EntryDialog extends Dialog {
             if (resetPeriodOnAllDayChange && event.isFromClient()) {
                 if (event.getValue()) {
                     LocalDateTime start = fieldStart.getValue().toLocalDate().atStartOfDay();
-
                     // reset the start to the same day with one hour difference
                     fieldStart.setValue(start);
                     fieldEnd.setValue(start.plusDays(1));
 
                 } else {
                     LocalDateTime start = fieldStart.getValue().toLocalDate().atTime(LocalTime.now());
-
                     // reset the start to the same day with one hour difference
                     fieldStart.setValue(start);
                     fieldEnd.setValue(start.plusHours(1));
@@ -115,14 +114,12 @@ public class EntryDialog extends Dialog {
         });
         fieldRecurring.addValueChangeListener(event -> onRecurringChanged(event.getValue()));
 
-
-        // init binder
         binder = new Binder<>(Entry.class);
 
         binder.forField(fieldTitle).asRequired().bind(Entry::getTitle, Entry::setTitle);
         binder.forField(fieldStart).asRequired().bind(Entry::getStart, Entry::setStart);
         binder.forField(fieldEnd).asRequired().bind(Entry::getEnd, Entry::setEnd);
-        //opcjonalne
+        //optional fields
         binder.bind(fieldColor, Entry::getColor, Entry::setColor);
         binder.bind(fieldDescription, Entry::getDescription, Entry::setDescription);
         binder.bind(fieldAllDay, Entry::isAllDay, Entry::setAllDay);
@@ -199,7 +196,6 @@ public class EntryDialog extends Dialog {
             if (this.tmpEntry.isAllDay() && this.tmpEntry.getStart().toLocalDate().equals(this.tmpEntry.getEnd().toLocalDate())) {
                 this.tmpEntry.setEnd(this.tmpEntry.getEnd().plusDays(1));
             }
-
             // we can also create a fresh copy and leave the initial entry totally untouched
             entry.copyFrom(tmpEntry);
             if (recurring) {
@@ -214,7 +210,6 @@ public class EntryDialog extends Dialog {
                 entry.clearRecurringStart();
                 entry.clearRecurringEnd();
             }
-
             onSaveConsumer.accept(this.entry);
             close();
         }

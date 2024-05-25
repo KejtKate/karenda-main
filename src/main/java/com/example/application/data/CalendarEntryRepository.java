@@ -1,6 +1,8 @@
 package com.example.application.data;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -13,10 +15,14 @@ public interface CalendarEntryRepository extends JpaRepository<CalendarEntry, Lo
     void deleteById(Long aLong);
 
 
-    List<CalendarEntry> findAllByUserId(User userId); //??
+    @Query("SELECT e FROM CalendarEntry e WHERE e.originalID = :originalID")
+    List<CalendarEntry> search(@Param("originalID") String originalID);
 
 
-    List<CalendarEntry> findAllByUserUsername(User username); //??
+    @Override
+    default void deleteAll(Iterable<? extends CalendarEntry> entities) {
+
+    }
 
 }
 

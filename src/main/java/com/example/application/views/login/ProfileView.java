@@ -8,15 +8,9 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.notification.NotificationVariant;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.component.upload.Upload;
-import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.data.validator.EmailValidator;
@@ -24,13 +18,9 @@ import com.vaadin.flow.router.BeforeLeaveEvent;
 import com.vaadin.flow.router.BeforeLeaveObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.server.VaadinSession;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 
 import static com.vaadin.flow.component.formlayout.FormLayout.ResponsiveStep.LabelsPosition.TOP;
 
@@ -47,12 +37,9 @@ public class ProfileView extends VerticalLayout implements BeforeLeaveObserver {
 
     private User user;
 
-    private static final int MAX_FILE_SIZE_BYTES = 1024 * 1024;  //1MB
-
     private FormLayout userForm;
     private TextField name;
     private EmailField email;
-    private Image profilePic;
     private Button applyChangesButton;
 
 
@@ -62,7 +49,7 @@ public class ProfileView extends VerticalLayout implements BeforeLeaveObserver {
         this.user = VaadinSession.getCurrent().getAttribute(User.class);
         this.userForm = new FormLayout();
 
-        setId("profile-form-layout");  //to potrzebne do zmian wyglądu w css
+        setId("profile-form-layout");
 
         initFormFields();
         initFormLayouts();
@@ -80,19 +67,12 @@ public class ProfileView extends VerticalLayout implements BeforeLeaveObserver {
         name = new TextField("Name");
         email = new EmailField("Email");
 
-//        StreamResource resource = new StreamResource("profile-pic",
-//                () -> new ByteArrayInputStream(user.getProfilePicture()));
-//        profilePic = new Image(resource, "Profile picture");
-//        profilePic.setHeight("300px");
-//        profilePic.setWidth("300px");
-
         applyChangesButton = new Button("Apply changes");
         applyChangesButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         applyChangesButton.addClickListener(e -> {
                     try {
                         userBinder.writeBean(user);
                         userService.update(user);
-                        //getUI().ifPresent(ui -> ui.getPage().reload());
                     } catch (ValidationException validationException) {}
                 });
         userForm.add(
@@ -103,17 +83,6 @@ public class ProfileView extends VerticalLayout implements BeforeLeaveObserver {
 
     }
     private void initFormLayouts() {
-
-//        setSizeFull();
-//        setSpacing(true);
-//        setAlignItems(Alignment.CENTER);
-//        HorizontalLayout content = new HorizontalLayout();
-//        content.setSizeFull();
-
-//        VerticalLayout sidePic = new VerticalLayout(profilePic);
-//        sidePic.setWidth("40%");
-//        sidePic.setAlignSelf(Alignment.CENTER, profilePic);
-
         userForm.setResponsiveSteps(new FormLayout.ResponsiveStep("0", 1, TOP), new FormLayout.ResponsiveStep("600", 3, TOP));
         userForm.setId("profile-form");
         userForm.setWidth("700px");
@@ -122,9 +91,6 @@ public class ProfileView extends VerticalLayout implements BeforeLeaveObserver {
         userForm.setColspan(email, 3);
         userForm.setColspan(applyChangesButton, 3);
 
-//        content.add(userForm);
-//
-//        add(content);
     }
 
     private void initBinders() {

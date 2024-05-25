@@ -1,6 +1,5 @@
 package com.example.application.data;
 
-import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,7 +13,6 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-//@EqualsAndHashCode(callSuper = true)
 @Table(name = "calendar_entries", uniqueConstraints = { @UniqueConstraint(name = "originalID", columnNames = "originalID")})
 public class CalendarEntry extends AbstractEntity {
 
@@ -59,6 +57,10 @@ public class CalendarEntry extends AbstractEntity {
     @JoinColumn(name ="user_id", foreignKey = @ForeignKey(name = "app_user_id"))
     private User user;
 
+    public void deleteUser(){
+        this.user.deleteEntry();
+        this.user = null;
+    }
 
 
     public CalendarEntry() {
@@ -76,14 +78,28 @@ public class CalendarEntry extends AbstractEntity {
         this.editable = Boolean.TRUE;
     }
 
-    //konstruktor z Entry, czy to nie zastępuje nam tych converterów?
+
     public CalendarEntry(Entry entry){
-        this(entry.getId(), entry.getTitle(), entry.getStart(), entry.getEnd(), entry.isAllDay(), entry.getColor(), entry.getDescription(), entry.isRecurring(),
-                entry.getRecurringStart(),entry.getRecurringEnd(), entry.getRecurringDaysOfWeek(), true);
+        this(entry.getId(),
+                entry.getTitle(),
+                entry.getStart(),
+                entry.getEnd(),
+                entry.isAllDay(),
+                entry.getColor(),
+                entry.getDescription(),
+                entry.isRecurring(),
+                entry.getRecurringStart(),
+                entry.getRecurringEnd(),
+                entry.getRecurringDaysOfWeek(),
+                entry.isEditable());
     }
 
 
-    public CalendarEntry(String originalID, String title, LocalDateTime start, LocalDateTime end, boolean allDay, String color, String description, boolean recurring, @Nullable LocalDateTime recurringStart, @Nullable LocalDateTime recurringEnd, @Nullable Set<DayOfWeek> recurringDaysOfWeek, boolean editable) {
+    public CalendarEntry(String originalID, String title, LocalDateTime start, LocalDateTime end,
+                         boolean allDay, String color, String description,
+                         boolean recurring, LocalDateTime recurringStart,
+                         LocalDateTime recurringEnd, Set<DayOfWeek> recurringDaysOfWeek,
+                         boolean editable) {
         this.originalID=originalID;
         this.title = title;
         this.start = start;
@@ -98,7 +114,10 @@ public class CalendarEntry extends AbstractEntity {
         this.editable = editable;
     }
 
-    public CalendarEntry(String originalID, String title, LocalDateTime start, LocalDateTime end, boolean allDay, String color, String description, boolean recurring, @Nullable LocalDateTime recurringStart, @Nullable LocalDateTime recurringEnd, @Nullable Set<DayOfWeek> recurringDaysOfWeek, boolean editable, User user) {
+
+
+    public CalendarEntry(String originalID, String title, LocalDateTime start, LocalDateTime end, boolean allDay, String color, String description,
+                         boolean recurring, LocalDateTime recurringStart, LocalDateTime recurringEnd, Set<DayOfWeek> recurringDaysOfWeek, boolean editable, User user) {
         this.originalID=originalID;
         this.title = title;
         this.start = start;

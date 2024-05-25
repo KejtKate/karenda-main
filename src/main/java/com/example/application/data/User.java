@@ -11,8 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import static jakarta.persistence.CascadeType.ALL;
-
 @Entity
 @Getter
 @Setter
@@ -40,12 +38,44 @@ public class User extends AbstractEntity {
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Role> roles;
 
-//    @Lob
-//    @Column(name = "profile_picture")
-//    protected byte[] profilePicture;
-
-    @OneToMany(mappedBy = "user", cascade = ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<CalendarEntry> calendarEntries = new ArrayList<>();
+
+
+    public void deleteEntry() {
+        this.calendarEntries.forEach(entry -> entry.deleteUser());
+        this.calendarEntries.clear();
+    }
+
+    public User() {
+    }
+
+    public User(Long id, String username, String name, String email, String password, Set<Role> roles) {
+        this.setId(getId());
+        this.username = username;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
+    }
+
+    public User(String username, String name, String email, String password, Set<Role> roles) {
+        this.username = username;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
+    }
+
+    @Override
+    public Long getId() {
+        return super.getId();
+    }
+
+    @Override
+    public void setId(Long id) {
+        super.setId(id);
+    }
 
     public @Email String getEmail() {
         return email;

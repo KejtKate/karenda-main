@@ -1,6 +1,7 @@
 package com.example.application.views.calendar;
 
 
+import com.example.application.data.CalendarEntry;
 import com.example.application.services.EntryService;
 import com.example.application.views.MainLayout;
 import com.example.application.views.calendar.ui.CalendarToolbar;
@@ -17,10 +18,9 @@ import org.vaadin.stefan.fullcalendar.dataprovider.EntryProvider;
 import org.vaadin.stefan.fullcalendar.dataprovider.InMemoryEntryProvider;
 
 import java.time.DayOfWeek;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.vaadin.stefan.fullcalendar.CalendarViewImpl.TIME_GRID_DAY;
 import static org.vaadin.stefan.fullcalendar.CalendarViewImpl.TIME_GRID_WEEK;
@@ -76,6 +76,7 @@ public class CalendarView extends VerticalLayout {
         List<Entry> entryList = entryService.initUserEntries();
         InMemoryEntryProvider<Entry> entryProvider = EntryProvider.inMemoryFrom(entryList);
         calendar.setEntryProvider(entryProvider);
+
     }
 
     protected void onEntryClick(EntryClickedEvent event) {
@@ -106,9 +107,8 @@ public class CalendarView extends VerticalLayout {
         calendar.gotoDate(event.getDate());
     }
 
-    //Called by the calendar's dates rendered listener. Noop by default.
-//     * Please note, that there is a separate dates rendered listener taking
-//     * care of updating the toolbar.
+//Called by the calendar's dates rendered listener. Noop by default.
+//Please note, that there is a separate dates rendered listener taking care of updating the toolbar.
     protected void onDatesRendered(DatesRenderedEvent event) {
         toolbar.updateDate(event.getIntervalStart());
     }
@@ -121,7 +121,7 @@ public class CalendarView extends VerticalLayout {
         System.out.println("getStart(): " + event.getStart());
         System.out.println("getStartWithOffset():  " + event.getStartWithOffset());
         Entry entry = new Entry();
-        entry.setStart(event.getStart()); // also event times are always utc based
+        entry.setStart(event.getStart());
         entry.setEnd(event.getEnd());
         entry.setAllDay(event.isAllDay());
         entry.setColor("dodgerblue");

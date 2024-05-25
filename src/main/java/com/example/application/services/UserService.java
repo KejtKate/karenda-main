@@ -15,10 +15,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 @Service
 public class UserService {
 
+    @Autowired
     private final UserRepository repository;
 
     @Autowired
@@ -27,6 +29,7 @@ public class UserService {
     @Autowired
     private final PasswordEncoder passwordEncoder;
 
+    @Autowired
     private AuthenticatedUser authenticatedUser;
 
     public UserService(UserRepository repository, PasswordTokenRepository tokenRepository, PasswordEncoder passwordEncoder, AuthenticatedUser authenticatedUser) {
@@ -69,6 +72,7 @@ public class UserService {
     }
 
     public User saveUser(User entity){
+        Assert.isTrue(!usernameExists(entity.getUsername()), "user should not exist");
         entity.setRoles(Collections.singleton(Role.USER));
         String encodedPassword = passwordEncoder.encode(entity.getPassword());
         entity.setPassword(encodedPassword);
@@ -88,6 +92,9 @@ public class UserService {
 
     public User findUserByEmail(String email){
         return repository.findByEmail(email);
+    }
+    public User findUserByUsername(String username){
+        return repository.findByUsername(username);
     }
 
     public void createPasswordResetTokenForUser(User user, String token) {

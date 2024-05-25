@@ -15,7 +15,9 @@ import java.util.Objects;
 @Service
 public class EntryService {
 
+    @Autowired
     private final CalendarEntryRepository entryRepository;
+    @Autowired
     private final UserService userService;
 
     @Autowired
@@ -24,12 +26,12 @@ public class EntryService {
         this.userService = userService;
     }
 
-
     public CalendarEntry toCalendarEntry(Entry entry) {
         return new CalendarEntry(entry);
     }
+
     public Entry toEntry(CalendarEntry calendarEntry) {
-        Entry entry = new Entry(String.valueOf(calendarEntry.getId()));
+        Entry entry = new Entry(calendarEntry.getOriginalID());
         entry.setTitle(calendarEntry.getTitle());
         entry.setStart(calendarEntry.getStart());
         entry.setEnd(calendarEntry.getEnd());
@@ -44,7 +46,11 @@ public class EntryService {
         return entry;
     }
 
-    //save onEntriesCreated tylko przy savie dajemy usera bo reszta entry już jest do niego przypisana - tak mi się wydaje?
+    public List<CalendarEntry> searchCalendarEntries(String orginalID) {
+        return entryRepository.search(orginalID);
+    }
+
+    //save onEntriesCreated
     public void saveCalendarEntries(Collection<Entry> entries){
         entries.forEach(entry -> {
             CalendarEntry calendarEntry = new CalendarEntry(entry);
@@ -55,14 +61,14 @@ public class EntryService {
     }
     //remove onEntriesRemoved
     public void removeCalendarEntries(Collection<Entry> entries) {
-        //entries.forEach(entry -> entryRepository.delete(toCalendarEntry(entry)));
-        for (Entry entry : entries) {
-            CalendarEntry databaseEntry = entryRepository.findByOriginalID(entry.getId());
-            if(Objects.equals(databaseEntry.getOriginalID(), entry.getId())){
-                entryRepository.delete(databaseEntry);
-                System.out.println("Entry removed");
+        entries.forEach(entry -> {
+            List<CalendarEntry> databaseEntry = entryRepository.search(entry.getId());
+            if(databaseEntry !=null && !databaseEntry.isEmpty()){
+                CalendarEntry calendarEntry = databaseEntry.get(0);
+                entryRepository.delete(calendarEntry);
             }
-        }
+        });
+
     }
 
     //update onEntryChanged

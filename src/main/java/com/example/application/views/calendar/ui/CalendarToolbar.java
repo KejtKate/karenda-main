@@ -58,7 +58,7 @@ public class CalendarToolbar extends MenuBar {
         addItem(VaadinIcon.ANGLE_RIGHT.create(), e -> calendar.next());
         addItem("Today", e -> calendar.today());
 
-        final List<CalendarView> calendarViews = List.of(DAY_GRID_MONTH, TIME_GRID_DAY, TIME_GRID_WEEK, MULTI_MONTH);
+        final List<CalendarView> calendarViews = List.of(DAY_GRID_MONTH, TIME_GRID_DAY, TIME_GRID_WEEK, MULTI_MONTH, LIST_MONTH, LIST_YEAR);
         viewSelector = addItem(getViewName(selectedView));
         SubMenu subMenu = viewSelector.getSubMenu();
         calendarViews.stream()
@@ -74,18 +74,15 @@ public class CalendarToolbar extends MenuBar {
     }
 
     private String getViewName(CalendarView view) {
-        switch ((CalendarViewImpl) view){
-                        case DAY_GRID_MONTH:
-                            return "Month";
-                        case TIME_GRID_DAY:
-                            return "Day";
-                        case TIME_GRID_WEEK:
-                            return "Week";
-                        case MULTI_MONTH:
-                            return "Year";
-                        default:
-                            return "Undefined";
-        }
+        return switch ((CalendarViewImpl) view) {
+            case DAY_GRID_MONTH -> "Month";
+            case TIME_GRID_DAY -> "Day";
+            case TIME_GRID_WEEK -> "Week";
+            case MULTI_MONTH -> "Year";
+            case LIST_MONTH -> "List Month";
+            case LIST_YEAR -> "List Year";
+            default -> "Undefined";
+        };
     }
 
 

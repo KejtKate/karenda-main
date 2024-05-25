@@ -1,6 +1,7 @@
 package com.example.application;
 
 import com.example.application.data.UserRepository;
+import com.example.application.services.UserService;
 import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.theme.Theme;
 import javax.sql.DataSource;
@@ -19,7 +20,9 @@ public class Application implements AppShellConfigurator {
         SpringApplication.run(Application.class, args);
     }
 
-    //TODO czy to mogę wywalić?
+
+
+
     @Bean
     SqlDataSourceScriptDatabaseInitializer dataSourceScriptDatabaseInitializer(DataSource dataSource,
             SqlInitializationProperties properties, UserRepository repository) {
