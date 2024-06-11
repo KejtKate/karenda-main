@@ -30,7 +30,6 @@ public class CalendarToolbar extends MenuBar {
     private Button buttonDatePicker;
     private MenuItem viewSelector;
 
-    private ComboBox<CalendarView> viewComboBox;
     private CalendarView selectedView = CalendarViewImpl.DAY_GRID_MONTH;
 
 
